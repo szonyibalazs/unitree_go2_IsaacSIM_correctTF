@@ -17,6 +17,24 @@ the physical Go2's `/lowstate` stream.
 <img src="./media/twin_low.png" width="46%" alt="Go2 twin, low angle">
 </p>
 
+## Simulated sensors in use
+
+The sim publishes the real Go2's topics, so the same perception / navigation stack runs on top of it
+unchanged. Screenshots from the warehouse scene:
+
+<p align="center">
+<img src="./media/sim_with_zone_editor.png" width="900" alt="Isaac Sim (left) with a browser-based zone editor showing the accumulated lidar map (right)">
+</p>
+<p align="center"><em>Isaac Sim running the Go2 (left) next to an external map / zone-editor UI fed by the simulated lidar (right).</em></p>
+
+<p align="center">
+<img src="./media/lidar_map_navigation.png" width="62%" alt="Accumulated lidar map with navigation goal">&nbsp;
+<img src="./media/lidar_costmap.png" width="30%" alt="Lidar scan with costmap around the robot">
+</p>
+<p align="center"><em>Accumulated RTX-lidar map with a navigation goal (left); live scan with the costmap around the robot (right).</em></p>
+
+The map, costmap and zone-editor UI belong to the separate ROS 2 navigation stack and are **not** part of this repository.
+
 ## Reproducible environment (`env_isaaclab`)
 
 | Component   | Version                                      |

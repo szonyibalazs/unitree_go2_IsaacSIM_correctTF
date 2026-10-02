@@ -47,6 +47,7 @@ from isaaclab.utils.noise import UniformNoiseCfg as Unoise
 import isaaclab_tasks.manager_based.locomotion.velocity.mdp as mdp
 
 from terrain_cfg import ROUGH_TERRAINS_CFG
+from warehouse_stairs import WAREHOUSE_STAIRS_TERRAINS_CFG
 from stairs4 import (STAIRS4_TERRAINS_CFG, STAIRS4_CURRICULUM_CFG, Stairs4CommandCfg, reset_stairs_start, stairs_done,
                      stairs_levels, progress, feet_stumble, foot_clearance, stance_width, base_height_local,
                      edge_fear, fell_off)
@@ -119,7 +120,8 @@ class MySceneCfg(InteractiveSceneCfg):
         terrain = TerrainImporterCfg(
             prim_path="/World/ground",
             terrain_type="generator",
-            terrain_generator=STAIRS4_TERRAINS_CFG if args_cli.terrain == "stairs4" else ROUGH_TERRAINS_CFG,
+            terrain_generator={"stairs4": STAIRS4_TERRAINS_CFG, "warehouse_stairs": WAREHOUSE_STAIRS_TERRAINS_CFG}.get(
+                args_cli.terrain, ROUGH_TERRAINS_CFG),
             physics_material=sim_utils.RigidBodyMaterialCfg(
                 friction_combine_mode="multiply",
                 restitution_combine_mode="multiply",
@@ -368,6 +370,15 @@ class UnitreeGo2CustomEnvCfg(LocomotionVelocityRoughEnvCfg):
 
         # terminations
         self.terminations.base_contact.params["sensor_cfg"].body_names = "base"
+
+
+@configclass
+class UnitreeGo2WarehouseStairsEnvCfg(UnitreeGo2CustomEnvCfg):
+    """--terrain warehouse_stairs: a robot a lépcsőpálya elején (+x felé nézve) indul; nincs időkorlátos reset."""
+    def __post_init__(self):
+        super().__post_init__()
+        self.scene.robot.init_state.pos = (0.0, 0.0, 0.45)
+        self.terminations.time_out = None
 
 
 @configclass

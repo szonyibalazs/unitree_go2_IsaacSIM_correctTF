@@ -46,7 +46,7 @@ parser.add_argument("--task", type=str, default="Isaac-Velocity-Rough-Unitree-Go
 parser.add_argument("--seed", type=int, default=None, help="Seed used for the environment")
 
 parser.add_argument("--custom_env", type=str, default=SELECTED_ENVIRONMENT, help="Setup the environment")
-parser.add_argument("--terrain", type=str, default="flat", help="Setup the terrain (flat | stairs4 | rough)")
+parser.add_argument("--terrain", type=str, default="flat", help="Setup the terrain (flat | stairs4 | warehouse_stairs | rough)")
 parser.add_argument("--list_envs", action="store_true", help="List all available environments and exit")
 
 # --- ÚJ: procedurálisan generált világok ---
@@ -225,7 +225,7 @@ from unitree_api.msg import Request as SportRequest
 _ckpt("import agent_cfg")
 from agent_cfg import unitree_go2_agent_cfg, unitree_g1_agent_cfg
 _ckpt("import custom_rl_env (this pulls isaaclab_assets Unitree USD cfg)")
-from custom_rl_env import UnitreeGo2CustomEnvCfg, UnitreeGo2Stairs4EnvCfg, G1RoughEnvCfg
+from custom_rl_env import UnitreeGo2CustomEnvCfg, UnitreeGo2Stairs4EnvCfg, UnitreeGo2WarehouseStairsEnvCfg, G1RoughEnvCfg
 import custom_rl_env
 _ckpt("import omnigraph")
 from omnigraph import create_front_cam_omnigraph
@@ -510,7 +510,8 @@ def run_sim():
     _keyboard = _appwindow.get_keyboard()
     _sub_keyboard = _input.subscribe_to_keyboard_events(_keyboard, sub_keyboard_event)
 
-    env_cfg = UnitreeGo2Stairs4EnvCfg() if args_cli.terrain == "stairs4" else UnitreeGo2CustomEnvCfg()
+    env_cfg = {"stairs4": UnitreeGo2Stairs4EnvCfg, "warehouse_stairs": UnitreeGo2WarehouseStairsEnvCfg}.get(
+        args_cli.terrain, UnitreeGo2CustomEnvCfg)()
 
     if args_cli.robot == "g1":
         env_cfg = G1RoughEnvCfg()
@@ -525,7 +526,9 @@ def run_sim():
     if args_cli.terrain == "stairs4":
         agent_cfg = {**agent_cfg, "experiment_name": "unitree_go2_stairs4"}
 
-    if args_cli.terrain == "flat" and args_cli.custom_env:
+    if args_cli.terrain == "warehouse_stairs" and args_cli.custom_env == SELECTED_ENVIRONMENT:
+        args_cli.custom_env = "full-warehouse"  # ehhez a módhoz a teljes raktár a default
+    if args_cli.terrain in ("flat", "warehouse_stairs") and args_cli.custom_env:
         _ckpt(f"[KÖRNYEZET] 🎯 Kiválasztott környezet: '{args_cli.custom_env}'")
         setup_custom_env(args_cli.custom_env)
 
@@ -557,6 +560,10 @@ def run_sim():
 
     _ckpt("env.get_observations()")
     obs = env.get_observations()
+    if args_cli.terrain == "warehouse_stairs":
+        # a spawn a világ (0,0)-ra esik, a RESET viszont init_state + terep-origin (a lépcső eleje) -> egyszer lefuttatjuk
+        reset_robot_physics(env)
+        obs = env.get_observations()
     _ckpt("env.get_observations: done")
 
     _ckpt("rclpy.init + RobotBaseNode")

@@ -65,6 +65,7 @@ First start compiles shaders and downloads the default warehouse scene from NVID
 More examples (everything after the script name goes to `main.py`):
 ```bash
 ./run_container.sh main.py --robot g1 --terrain flat          # Unitree G1
+./run_container.sh main.py --terrain warehouse_stairs              # full warehouse + stair course
 ./run_container.sh main.py --list_envs                        # available environments
 ./run_container.sh main.py --capture 80 --enable_cameras \
     --rendering_mode quality --capture_dir ./media            # render hero stills

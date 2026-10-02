@@ -1,0 +1,13 @@
+# Native (non-Docker) alternative. Isaac Sim 4.5.0 and Isaac Lab @ b4c3210 must be installed
+# separately (see README); requirements.lock.txt is the exact `pip freeze` of the original env.
+name: env_isaaclab
+channels: [conda-forge]
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - torch==2.7.0
+      - numpy==1.26.4
+      - gymnasium==1.2.1
+      - rsl-rl-lib==5.0.1
+      - warp-lang==0.10.1

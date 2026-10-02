@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+logs/rsl_rl/*/*/events.out.tfevents*
+envs/
+frames_*
+.env
+.vscode/

@@ -34,7 +34,7 @@ conda env is in [`requirements.lock.txt`](./requirements.lock.txt).
 ### Requirements
 - Ubuntu 22.04 / 24.04, NVIDIA RTX GPU, driver ≥ 535 (tested with 580)
 - Docker + [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
-- ~40 GB free disk, X11 session for the GUI (or use `--headless`)
+- ~40 GB free disk, X11 session for the GUI (the simulator imports `omni.ui`, so `--headless` is not supported)
 
 ### Run
 ```bash
@@ -42,14 +42,13 @@ git clone https://github.com/szonyibalazs/unitree_go2_isaacSIM_realtf.git
 cd unitree_go2_isaacSIM_realtf
 ./run_container.sh            # builds the `env_isaaclab` image on first use, then starts Go2 on flat terrain
 ```
-First start compiles shaders and downloads assets – give it a few minutes. Control the dog with WASD.
+First start compiles shaders and downloads the default warehouse scene from NVIDIA's asset server (needs internet) – give it a few minutes. Control the dog with WASD.
 
 More examples (everything after the script name goes to `main.py`):
 ```bash
 ./run_container.sh main.py --robot g1 --terrain flat          # Unitree G1
-./run_container.sh main.py --headless --enable_cameras        # no window
 ./run_container.sh main.py --list_envs                        # available environments
-./run_container.sh main.py --capture 80 --headless --enable_cameras \
+./run_container.sh main.py --capture 80 --enable_cameras \
     --rendering_mode quality --capture_dir ./media            # render hero stills
 ./run_container.sh bash                                       # shell inside the container
 ```
@@ -75,7 +74,7 @@ Network layout and troubleshooting: [docs/TWINBOT_IMU_FIX.md](./docs/TWINBOT_IMU
 
 ## Training
 ```bash
-./run_container.sh train_stairs.py --headless
+./run_container.sh train_stairs.py --headless   # training script does support headless
 ```
 Checkpoints go to `logs/rsl_rl/<experiment>/<run>/`. The repo ships one checkpoint each for
 Go2 rough, Go2 stairs and G1 rough; `main.py` loads the latest run found there.

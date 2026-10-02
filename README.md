@@ -38,8 +38,8 @@ conda env is in [`requirements.lock.txt`](./requirements.lock.txt).
 
 ### Run
 ```bash
-git clone https://github.com/szonyibalazs/unitree_go2_isaacSIM_realtf.git
-cd unitree_go2_isaacSIM_realtf
+git clone https://github.com/szonyibalazs/unitree_go2_IsaacSIM_correctTF.git
+cd unitree_go2_IsaacSIM_correctTF
 ./run_container.sh            # builds the `env_isaaclab` image on first use, then starts Go2 on flat terrain
 ```
 First start compiles shaders and downloads the default warehouse scene from NVIDIA's asset server (needs internet) – give it a few minutes. Control the dog with WASD.

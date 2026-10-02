@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     echo "deb [signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" \
         > /etc/apt/sources.list.d/ros2.list && \
     apt-get update && apt-get install -y --no-install-recommends \
-        ros-humble-ros-base python3-colcon-common-extensions && \
+        ros-humble-ros-base ros-humble-rosidl-generator-dds-idl python3-colcon-common-extensions && \
     rm -rf /var/lib/apt/lists/*
 
 # Isaac Lab, pinned to the commit the project was developed against
@@ -22,7 +22,7 @@ ARG ISAACLAB_COMMIT=b4c3210
 RUN git clone https://github.com/isaac-sim/IsaacLab.git ${ISAACLAB_PATH} && \
     git -C ${ISAACLAB_PATH} checkout ${ISAACLAB_COMMIT} && \
     ln -s ${ISAACSIM_PATH} ${ISAACLAB_PATH}/_isaac_sim && \
-    cd ${ISAACLAB_PATH} && ./isaaclab.sh --install rsl_rl
+    cd ${ISAACLAB_PATH} && TERM=xterm ./isaaclab.sh --install rsl_rl
 
 # Unitree ROS 2 messages (unitree_go, unitree_api)
 ARG TOOLBOX_COMMIT=cd11d74797b22b1a972fcce5aad4ed0f96ca76f7
